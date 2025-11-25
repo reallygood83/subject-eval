@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSettings, GeminiModel } from '../contexts/SettingsContext';
 import { useAuth } from '../contexts/AuthContext';
+import Footer from './Footer';
 
 interface SettingsProps {
   onBack?: () => void;
@@ -213,6 +214,11 @@ const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             <li>✓ API 키는 본인만 볼 수 있습니다</li>
             <li>✓ 설정은 자동으로 저장되며 모든 기기에서 동기화됩니다</li>
           </ul>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8">
+          <Footer />
         </div>
       </main>
     </div>

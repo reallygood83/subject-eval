@@ -12,6 +12,7 @@ import Settings from './components/Settings';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import { HeaderIcon, DownloadIcon, CheckAllIcon, RestartIcon } from './components/icons';
+import Footer from './components/Footer';
 
 const App: React.FC = () => {
   const { settings, isConfigured } = useSettings();
@@ -520,6 +521,11 @@ const App: React.FC = () => {
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {renderContent()}
       </main>
+
+      {/* Footer */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-6">
+        <Footer />
+      </div>
     </div>
   );
 };
