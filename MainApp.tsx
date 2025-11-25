@@ -292,66 +292,71 @@ const App: React.FC = () => {
             const canConfirmAll = students.some(s => s.comment && !s.isConfirmed);
 
           return (
-            <div>
-              <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h2 className="text-xl font-semibold mb-4">학생 정보 및 기능</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                  <div className="flex flex-wrap items-center gap-4">
-                    <div>
-                      <label htmlFor="studentCount" className="font-medium text-gray-700 mr-2">학생 수:</label>
+            <div className="px-3 sm:px-0">
+              {/* 학생 정보 및 기능 카드 - Neo-Brutalism 스타일 */}
+              <div className="card-neo p-4 sm:p-6 bg-white mb-6">
+                <h2 className="text-lg sm:text-xl font-black mb-4 border-black border-b-3 pb-2 inline-block">📊 학생 정보 및 기능</h2>
+
+                {/* 학생 수 & 과목 선택 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-start">
+                  <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4">
+                    <div className="w-full sm:w-auto">
+                      <label htmlFor="studentCount" className="block text-xs sm:text-sm font-black text-black mb-1">👥 학생 수</label>
                       <input
                         type="number"
                         id="studentCount"
                         value={studentCount}
                         onChange={(e) => setStudentCount(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                        className="w-24 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="input-neo w-full sm:w-24 text-sm sm:text-base"
                         min="1"
                       />
                     </div>
-                    <div>
-                      <label htmlFor="globalSubject" className="font-medium text-gray-700 mr-2">전체 과목:</label>
+                    <div className="w-full sm:w-auto">
+                      <label htmlFor="globalSubject" className="block text-xs sm:text-sm font-black text-black mb-1">📚 전체 과목</label>
                       <select
                         id="globalSubject"
                         value={currentSubject}
                         onChange={(e) => handleGlobalSubjectChange(e.target.value)}
-                        className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="input-neo w-full text-sm sm:text-base"
                       >
                         {evaluationData.subjects.map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </div>
                   </div>
+
+                  {/* 전체 확정 & 다운로드 버튼 */}
                   <div className="flex flex-col sm:flex-row gap-2">
                     <button
                       onClick={handleConfirmAllComments}
                       disabled={!canConfirmAll}
                       title={!canConfirmAll ? "확정할 평어가 없습니다." : "모든 평어를 확정합니다."}
-                      className="flex items-center justify-center gap-2 px-4 py-2 bg-cyan-600 text-white font-semibold rounded-md shadow-sm hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                      className="btn-neo-primary text-xs sm:text-sm w-full sm:w-auto"
                     >
                       <CheckAllIcon />
-                      전체 평어 확정
+                      <span>전체 평어 확정</span>
                     </button>
                     <button
                       onClick={handleDownloadComments}
                       disabled={!canDownload}
                       title={!canDownload ? "모든 평어를 생성하고 '확인'해야 활성화됩니다." : ""}
-                      className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white font-semibold rounded-md shadow-sm hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-lime-200 text-black font-bold border-black border-2 shadow-neo-sm hover:shadow-neo-md transition-all disabled:bg-gray-300 disabled:border-gray-400 disabled:cursor-not-allowed text-xs sm:text-sm w-full sm:w-auto"
                     >
                       <DownloadIcon />
-                      CSV 다운로드
+                      <span>CSV 다운로드</span>
                     </button>
                   </div>
                 </div>
 
-                {/* Bulk Settings Section */}
-                <div className="mt-6 pt-6 border-t border-gray-200">
-                    <h3 className="text-sm font-bold text-gray-800 mb-3">일괄 설정 (자동 선택 및 일괄 적용 시 사용)</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+                {/* 일괄 설정 섹션 */}
+                <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t-2 border-black">
+                    <h3 className="text-xs sm:text-sm font-black text-black mb-3">⚙️ 일괄 설정 (자동 선택 및 일괄 적용 시 사용)</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 items-end">
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">성취 수준</label>
+                            <label className="block text-xs font-black text-black mb-1">성취 수준</label>
                             <select
                                 value={bulkAchievementLevel}
                                 onChange={(e) => setBulkAchievementLevel(e.target.value)}
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                className="input-neo w-full text-xs sm:text-sm"
                             >
                                 <option>상 (매우 잘함)</option>
                                 <option>중 (잘함)</option>
@@ -360,11 +365,11 @@ const App: React.FC = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">태도</label>
+                            <label className="block text-xs font-black text-black mb-1">태도</label>
                             <select
                                 value={bulkAttitude}
                                 onChange={(e) => setBulkAttitude(e.target.value)}
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                className="input-neo w-full text-xs sm:text-sm"
                             >
                                 <option>좋음</option>
                                 <option>보통</option>
@@ -372,11 +377,11 @@ const App: React.FC = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">평어 생성 중심</label>
+                            <label className="block text-xs font-black text-black mb-1">평어 생성 중심</label>
                             <select
                                 value={bulkGenerationFocus}
                                 onChange={(e) => setBulkGenerationFocus(e.target.value)}
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                className="input-neo w-full text-xs sm:text-sm"
                             >
                                 <option>성취 수준 & 태도 같은 비율</option>
                                 <option>성취 수준 중심</option>
@@ -385,44 +390,47 @@ const App: React.FC = () => {
                         </div>
                         <button
                             onClick={handleBulkApply}
-                            className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors text-sm h-[38px]"
+                            className="btn-neo-secondary text-xs sm:text-sm w-full"
                         >
-                            현재 학생들에게 일괄 적용
+                            <span>현재 학생들에게 일괄 적용</span>
                         </button>
                     </div>
                 </div>
 
-                <div className="mt-6 flex flex-col sm:flex-row gap-2 items-center justify-between border-t pt-6 border-gray-200">
-                  <div className="flex items-center gap-2">
+                {/* 자동선택 & 전체 평어 생성 */}
+                <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center justify-between pt-4 sm:pt-6 border-t-2 border-black">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     <button
                       onClick={handleAutoSelectAll}
-                      className="flex-shrink-0 px-4 py-2 bg-gray-600 text-white font-semibold rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                      className="btn-neo-secondary text-xs sm:text-sm w-full sm:w-auto"
                     >
-                      전체 성취기준 자동선택
+                      <span>전체 성취기준 자동선택</span>
                     </button>
-                    <select
-                      id="autoSelectCount"
-                      value={autoSelectCount}
-                      onChange={(e) => setAutoSelectCount(parseInt(e.target.value, 10))}
-                      className="w-20 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    >
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                    </select>
-                    <label htmlFor="autoSelectCount" className="text-sm font-medium text-gray-700 flex-shrink-0">개씩</label>
+                    <div className="flex items-center gap-2">
+                      <select
+                        id="autoSelectCount"
+                        value={autoSelectCount}
+                        onChange={(e) => setAutoSelectCount(parseInt(e.target.value, 10))}
+                        className="input-neo w-20 text-xs sm:text-sm"
+                      >
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                      </select>
+                      <label htmlFor="autoSelectCount" className="text-xs sm:text-sm font-black text-black">개씩</label>
+                    </div>
                   </div>
                   {isGeneratingAll && generationProgress ? (
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center py-2">
                       <LoadingSpinner size="md" message={`평어 생성 중... ${generationProgress.current}/${generationProgress.total}`} />
                     </div>
                   ) : (
                     <button
                       onClick={handleGenerateAllComments}
                       disabled={isGeneratingAll}
-                      className="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-wait focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                      className="btn-neo-primary text-sm sm:text-base w-full sm:w-auto"
                     >
-                      전체 평어 생성
+                      <span>✨ 전체 평어 생성</span>
                     </button>
                   )}
                 </div>

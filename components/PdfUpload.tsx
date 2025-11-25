@@ -65,19 +65,21 @@ const PdfUpload: React.FC<PdfUploadProps> = ({ onUpload, loading, error }) => {
         </div>
       )}
 
-      {loading ? (
-        <div className="mt-4 sm:mt-6 flex justify-center">
-          <LoadingSpinner size="lg" message="PDF 분석 중..." />
-        </div>
-      ) : (
-        <button
-          onClick={handleUploadClick}
-          disabled={!file}
-          className="btn-neo-primary mt-4 sm:mt-6 w-full px-4 py-3 sm:px-6 sm:py-4 text-base sm:text-lg"
-        >
-          🚀 업로드 및 분석 시작
-        </button>
-      )}
+      <div className="mt-4 sm:mt-6">
+        {loading ? (
+          <div className="flex justify-center py-2">
+            <LoadingSpinner size="lg" message="PDF 분석 중..." />
+          </div>
+        ) : (
+          <button
+            onClick={handleUploadClick}
+            disabled={!file}
+            className="btn-neo-primary w-full text-base sm:text-lg"
+          >
+            <span>🚀 업로드 및 분석 시작</span>
+          </button>
+        )}
+      </div>
     </div>
   );
 };

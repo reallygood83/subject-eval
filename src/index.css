@@ -13,8 +13,10 @@
 @layer components {
   /* Neo-Brutalism 버튼 스타일 */
   .btn-neo {
-    @apply h-12 px-5 border-black border-2 font-bold;
+    @apply px-5 py-3 border-black border-2 font-bold;
     @apply transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2;
+    @apply text-center;
   }
 
   .btn-neo:hover {

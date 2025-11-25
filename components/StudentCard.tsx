@@ -58,9 +58,10 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
             <label className="text-xs sm:text-sm font-black text-black">📋 성취기준 (다중 선택)</label>
             <button
                 onClick={() => onAutoSelect(student.id)}
-                className="btn-neo-secondary text-xs px-2 py-1 sm:px-3 w-full sm:w-auto"
+                className="btn-neo-secondary text-xs sm:text-sm px-3 py-2 w-full sm:w-auto"
             >
-                <WandIcon /> 자동 선택
+                <WandIcon />
+                <span>자동 선택</span>
             </button>
         </div>
         <div className="max-h-32 overflow-y-auto p-2 sm:p-3 border-black border-2 space-y-1 sm:space-y-2 bg-lime-100">
@@ -153,20 +154,22 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
 
 
       {/* 평어 생성 버튼 */}
-      {student.isGenerating ? (
-        <div className="mt-3 sm:mt-4 flex justify-center">
-          <LoadingSpinner size="md" message="평어 생성 중..." />
-        </div>
-      ) : (
-        <button
-          onClick={() => onGenerateComment(student.id)}
-          disabled={isGenerationDisabled}
-          className="btn-neo-primary w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base"
-        >
-          <SparklesIcon />
-          {student.comment ? '🔄 새로운 평어 생성' : '✨ 평어 생성'}
-        </button>
-      )}
+      <div className="mt-2 sm:mt-3 pt-3 sm:pt-4 border-t-2 border-black">
+        {student.isGenerating ? (
+          <div className="flex justify-center py-2">
+            <LoadingSpinner size="md" message="평어 생성 중..." />
+          </div>
+        ) : (
+          <button
+            onClick={() => onGenerateComment(student.id)}
+            disabled={isGenerationDisabled}
+            className="btn-neo-primary w-full text-sm sm:text-base"
+          >
+            <SparklesIcon />
+            <span>{student.comment ? '🔄 새로운 평어 생성' : '✨ 평어 생성'}</span>
+          </button>
+        )}
+      </div>
 
       {/* 생성된 평어 */}
       {student.error && (
@@ -188,19 +191,19 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
             rows={5}
             className="input-neo w-full text-xs sm:text-sm read-only:bg-gray-200 read-only:border-gray-400"
           />
-          <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-2 mt-3">
+          <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-2 mt-3 pt-3 border-t-2 border-black border-dashed">
             {student.isConfirmed ? (
               <>
-                <span className="flex items-center justify-center gap-1 text-xs sm:text-sm font-black bg-lime-200 px-2 py-1 sm:px-3 border-black border-2">
+                <span className="inline-flex items-center justify-center gap-1.5 text-xs sm:text-sm font-black bg-lime-200 px-3 py-2 border-black border-2">
                   <CheckCircleIcon />
-                  ✅ 확인됨
+                  <span>✅ 확인됨</span>
                 </span>
                 <button
                   onClick={() => onDataChange(student.id, { isConfirmed: false })}
-                  className="btn-neo-secondary text-xs px-2 py-1 sm:px-3 w-full sm:w-auto"
+                  className="btn-neo-secondary text-xs sm:text-sm px-3 py-2 w-full sm:w-auto"
                 >
                   <PencilIcon />
-                  수정
+                  <span>수정</span>
                 </button>
               </>
             ) : (
@@ -208,17 +211,17 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
                 <button
                   onClick={() => onGenerateComment(student.id)}
                   disabled={student.isGenerating}
-                  className="btn-neo-secondary text-xs px-2 py-1 sm:px-3 disabled:opacity-50 w-full sm:w-auto"
+                  className="btn-neo-secondary text-xs sm:text-sm px-3 py-2 disabled:opacity-50 w-full sm:w-auto"
                 >
                   <RefreshIcon />
-                  재생성
+                  <span>재생성</span>
                 </button>
                 <button
                   onClick={() => onDataChange(student.id, { isConfirmed: true })}
-                  className="text-xs px-2 py-1 sm:px-3 bg-lime-200 text-black font-black border-black border-2 shadow-neo-sm hover:shadow-neo-md transition-all w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2 text-xs sm:text-sm px-3 py-2 bg-lime-200 text-black font-bold border-black border-2 shadow-neo-sm hover:shadow-neo-md transition-all w-full sm:w-auto"
                 >
                   <CheckCircleIcon />
-                  확인
+                  <span>확인</span>
                 </button>
               </>
             )}

@@ -32,27 +32,29 @@ const ReviewData: React.FC<ReviewDataProps> = ({ evaluationData, onConfirm, onRe
         ))}
       </div>
 
-      {isReanalyzing ? (
-        <div className="mt-6 sm:mt-8 flex justify-center">
-          <LoadingSpinner size="md" message="PDF 재분석 중..." />
-        </div>
-      ) : (
-        <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-          <button
-            onClick={onReanalyze}
-            className="btn-neo-secondary px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base w-full sm:w-auto"
-          >
-            <RefreshIcon />
-            🔄 다시 분석 요청
-          </button>
-          <button
-            onClick={onConfirm}
-            className="btn-neo-primary px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base w-full sm:w-auto"
-          >
-            ✅ 확인, 평어 생성 시작
-          </button>
-        </div>
-      )}
+      <div className="mt-6 sm:mt-8 pt-4 border-t-2 border-black">
+        {isReanalyzing ? (
+          <div className="flex justify-center py-2">
+            <LoadingSpinner size="md" message="PDF 재분석 중..." />
+          </div>
+        ) : (
+          <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
+            <button
+              onClick={onReanalyze}
+              className="btn-neo-secondary text-sm sm:text-base w-full sm:w-auto"
+            >
+              <RefreshIcon />
+              <span>🔄 다시 분석 요청</span>
+            </button>
+            <button
+              onClick={onConfirm}
+              className="btn-neo-primary text-sm sm:text-base w-full sm:w-auto"
+            >
+              <span>✅ 확인, 평어 생성 시작</span>
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

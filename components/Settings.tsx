@@ -113,7 +113,7 @@ const Settings: React.FC<SettingsProps> = ({ onBack }) => {
             <label className="block text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3">
               🔑 Gemini API 키
             </label>
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch">
               <input
                 type={showApiKey ? 'text' : 'password'}
                 value={apiKey}
@@ -123,9 +123,9 @@ const Settings: React.FC<SettingsProps> = ({ onBack }) => {
               />
               <button
                 onClick={() => setShowApiKey(!showApiKey)}
-                className="btn-neo-secondary px-4 py-2 sm:px-6 w-full sm:w-auto"
+                className="btn-neo-secondary text-sm sm:text-base w-full sm:w-auto"
               >
-                {showApiKey ? '🙈 숨기기' : '👁️ 보기'}
+                <span>{showApiKey ? '🙈 숨기기' : '👁️ 보기'}</span>
               </button>
             </div>
             <p className="mt-2 text-xs sm:text-sm text-gray-600 font-medium">
@@ -179,18 +179,18 @@ const Settings: React.FC<SettingsProps> = ({ onBack }) => {
           </div>
 
           {/* Save Button & Message */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 pt-4 border-t-2 border-black">
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className="btn-neo-primary text-xl py-4"
+              className="btn-neo-primary w-full text-lg sm:text-xl"
             >
-              {isSaving ? '💾 저장 중...' : '💾 설정 저장'}
+              <span>{isSaving ? '💾 저장 중...' : '💾 설정 저장'}</span>
             </button>
 
             {saveMessage && (
               <div
-                className={`p-4 border-black border-2 rounded-md font-bold text-lg ${
+                className={`p-4 border-black border-2 rounded-md font-bold text-base sm:text-lg text-center ${
                   saveMessage.type === 'success'
                     ? 'bg-lime-200 text-green-800'
                     : 'bg-red-200 text-red-800'
