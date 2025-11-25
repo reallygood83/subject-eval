@@ -43,8 +43,12 @@ const LandingPage: React.FC = () => {
             초등학교 선생님들을 위한 스마트한 학생 평가 도구
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <button className="btn-neo-primary text-base sm:text-lg md:text-xl px-6 py-3 sm:px-8 sm:py-4 w-full sm:w-auto">
-              무료로 시작하기 →
+            <button
+              onClick={handleLogin}
+              disabled={loading}
+              className="btn-neo-primary text-base sm:text-lg md:text-xl px-6 py-3 sm:px-8 sm:py-4 w-full sm:w-auto"
+            >
+              {loading ? '로딩 중...' : user ? '시작하기 →' : '무료로 시작하기 →'}
             </button>
             <button className="btn-neo-secondary text-base sm:text-lg md:text-xl px-6 py-3 sm:px-8 sm:py-4 w-full sm:w-auto">
               더 알아보기
@@ -144,10 +148,14 @@ const LandingPage: React.FC = () => {
             지금 바로 시작하세요!
           </h3>
           <p className="text-lg sm:text-xl md:text-2xl font-bold mb-6 sm:mb-8 text-gray-800">
-            무료로 평어솜을 체험해보세요
+            무료로 이발소를 체험해보세요
           </p>
-          <button className="btn-neo-primary text-lg sm:text-xl md:text-2xl px-8 py-4 sm:px-10 sm:py-5 md:px-12 md:py-6 w-full sm:w-auto">
-            무료로 시작하기 →
+          <button
+            onClick={handleLogin}
+            disabled={loading}
+            className="btn-neo-primary text-lg sm:text-xl md:text-2xl px-8 py-4 sm:px-10 sm:py-5 md:px-12 md:py-6 w-full sm:w-auto"
+          >
+            {loading ? '로딩 중...' : user ? '시작하기 →' : '무료로 시작하기 →'}
           </button>
         </div>
       </section>
