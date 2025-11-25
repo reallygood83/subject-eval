@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { StudentData, EvaluationData, StandardEvaluation, AchievementStandard } from '../types';
-import { SparklesIcon, WandIcon, RefreshIcon, CheckCircleIcon, PencilIcon } from './icons';
+import { SparklesIcon, WandIcon, RefreshIcon, CheckCircleIcon, PencilIcon, CopyIcon } from './icons';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
 
@@ -14,6 +14,23 @@ interface StudentCardProps {
 }
 
 const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGeneratingAll, onDataChange, onGenerateComment, onAutoSelect }) => {
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const handleCopyComment = async () => {
+    if (student.comment) {
+      try {
+        await navigator.clipboard.writeText(student.comment);
+        setCopySuccess(true);
+        // 확정 상태로 변경
+        onDataChange(student.id, { isConfirmed: true });
+        // 2초 후 복사 성공 표시 제거
+        setTimeout(() => setCopySuccess(false), 2000);
+      } catch (err) {
+        console.error('복사 실패:', err);
+      }
+    }
+  };
+
   const handleStandardChange = (standardId: string) => {
     const isSelected = student.standardEvaluations.some(se => se.standardId === standardId);
     let newEvaluations: StandardEvaluation[];
@@ -217,11 +234,13 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
                   <span>재생성</span>
                 </button>
                 <button
-                  onClick={() => onDataChange(student.id, { isConfirmed: true })}
-                  className="inline-flex items-center justify-center gap-2 text-xs sm:text-sm px-3 py-2 bg-lime-200 text-black font-bold border-black border-2 shadow-neo-sm hover:shadow-neo-md transition-all w-full sm:w-auto"
+                  onClick={handleCopyComment}
+                  className={`inline-flex items-center justify-center gap-2 text-xs sm:text-sm px-3 py-2 text-black font-bold border-black border-2 shadow-neo-sm hover:shadow-neo-md transition-all w-full sm:w-auto ${
+                    copySuccess ? 'bg-green-300' : 'bg-lime-200'
+                  }`}
                 >
-                  <CheckCircleIcon />
-                  <span>확인</span>
+                  <CopyIcon />
+                  <span>{copySuccess ? '✓ 복사됨!' : '📋 복사'}</span>
                 </button>
               </>
             )}
