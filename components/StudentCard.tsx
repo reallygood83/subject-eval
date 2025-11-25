@@ -1,6 +1,8 @@
 import React from 'react';
 import type { StudentData, EvaluationData, StandardEvaluation, AchievementStandard } from '../types';
 import { SparklesIcon, WandIcon, RefreshIcon, CheckCircleIcon, PencilIcon } from './icons';
+import LoadingSpinner from './LoadingSpinner';
+import ErrorMessage from './ErrorMessage';
 
 interface StudentCardProps {
   student: StudentData;
@@ -44,60 +46,60 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
   const isGenerationDisabled = student.standardEvaluations.length === 0 || student.isGenerating || isGeneratingAll;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 flex flex-col space-y-4 transition-all hover:shadow-xl">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold text-gray-900">학생 {student.id}</h3>
-        <span className="text-sm font-semibold bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">{student.subject}</span>
+    <div className="card-neo p-4 sm:p-6 bg-white flex flex-col space-y-3 sm:space-y-4 hover:shadow-neo-lg transition-all">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <h3 className="text-lg sm:text-xl font-black text-black border-black border-b-3 sm:border-b-4 pb-1">👤 학생 {student.id}</h3>
+        <span className="text-xs sm:text-sm font-black bg-violet-200 text-black px-2 py-1 sm:px-3 border-black border-2 shadow-neo-sm">{student.subject}</span>
       </div>
 
       {/* 성취기준 선택 */}
       <div>
-        <div className="flex justify-between items-center mb-1">
-            <label className="text-sm font-medium text-gray-700">성취기준 (다중 선택)</label>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-2">
+            <label className="text-xs sm:text-sm font-black text-black">📋 성취기준 (다중 선택)</label>
             <button
                 onClick={() => onAutoSelect(student.id)}
-                className="flex items-center gap-1 text-xs px-2 py-1 bg-gray-100 text-gray-700 font-semibold rounded-md hover:bg-gray-200"
+                className="btn-neo-secondary text-xs px-2 py-1 sm:px-3 w-full sm:w-auto"
             >
                 <WandIcon /> 자동 선택
             </button>
         </div>
-        <div className="max-h-32 overflow-y-auto p-2 border border-gray-300 rounded-md space-y-2 bg-gray-50">
+        <div className="max-h-32 overflow-y-auto p-2 sm:p-3 border-black border-2 space-y-1 sm:space-y-2 bg-lime-100">
           {currentStandards.length > 0 ? currentStandards.map(standard => (
-            <div key={standard.id} className="flex items-center">
+            <div key={standard.id} className="flex items-center p-1.5 sm:p-2 hover:bg-lime-200 transition-colors">
               <input
                 type="checkbox"
                 id={`standard-${student.id}-${standard.id}`}
                 checked={student.standardEvaluations.some(se => se.standardId === standard.id)}
                 onChange={() => handleStandardChange(standard.id)}
-                className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                className="h-4 w-4 sm:h-5 sm:w-5 border-black border-2 flex-shrink-0"
               />
-              <label htmlFor={`standard-${student.id}-${standard.id}`} className="ml-2 text-sm text-gray-700">{standard.id} {standard.text}</label>
+              <label htmlFor={`standard-${student.id}-${standard.id}`} className="ml-2 sm:ml-3 text-xs sm:text-sm font-medium text-black break-words">{standard.id} {standard.text}</label>
             </div>
-          )) : <p className="text-sm text-gray-500">선택된 과목에 대한 성취기준이 없습니다.</p>}
+          )) : <p className="text-xs sm:text-sm font-bold text-gray-700">선택된 과목에 대한 성취기준이 없습니다.</p>}
         </div>
       </div>
       
       {/* 선택된 성취기준별 상세 설정 */}
       {student.standardEvaluations.length > 0 && (
-        <div className="space-y-4">
-            <h4 className="text-sm font-medium text-gray-700 border-t pt-4">선택된 성취기준 상세 설정</h4>
+        <div className="space-y-3 sm:space-y-4">
+            <h4 className="text-xs sm:text-sm font-black text-black border-t-3 sm:border-t-4 border-black pt-3 sm:pt-4">⚙️ 선택된 성취기준 상세 설정</h4>
             {student.standardEvaluations.map((se) => {
                 const standard = currentStandards.find(s => s.id === se.standardId);
                 if (!standard) return null;
                 return (
-                    <div key={se.standardId} className="p-4 border border-indigo-200 rounded-lg bg-indigo-50/50 space-y-3">
-                        <p className="text-sm font-semibold text-indigo-800">
-                           <span className="font-mono bg-indigo-100 text-indigo-700 rounded px-1.5 py-0.5 text-xs mr-2">{standard.id}</span>
+                    <div key={se.standardId} className="p-3 sm:p-4 border-black border-3 sm:border-4 bg-cyan-100 shadow-neo-sm space-y-2 sm:space-y-3">
+                        <p className="text-xs sm:text-sm font-black text-black break-words">
+                           <span className="font-mono bg-violet-200 text-black border-black border-2 px-1.5 py-0.5 sm:px-2 sm:py-1 text-xs mr-1 sm:mr-2 inline-block">{standard.id}</span>
                            {standard.text}
                         </p>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
-                                <label htmlFor={`level-${student.id}-${se.standardId}`} className="block text-xs font-medium text-gray-600 mb-1">성취 수준</label>
+                                <label htmlFor={`level-${student.id}-${se.standardId}`} className="block text-xs font-black text-black mb-1">성취 수준</label>
                                 <select
                                     id={`level-${student.id}-${se.standardId}`}
                                     value={se.achievementLevel}
                                     onChange={(e) => handleStandardEvaluationChange(se.standardId, { achievementLevel: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    className="input-neo w-full text-xs sm:text-sm"
                                 >
                                     <option>상 (매우 잘함)</option>
                                     <option>중 (잘함)</option>
@@ -106,12 +108,12 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor={`attitude-${student.id}-${se.standardId}`} className="block text-xs font-medium text-gray-600 mb-1">태도</label>
+                                <label htmlFor={`attitude-${student.id}-${se.standardId}`} className="block text-xs font-black text-black mb-1">태도</label>
                                 <select
                                     id={`attitude-${student.id}-${se.standardId}`}
                                     value={se.attitude}
                                     onChange={(e) => handleStandardEvaluationChange(se.standardId, { attitude: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    className="input-neo w-full text-xs sm:text-sm"
                                 >
                                     <option>좋음</option>
                                     <option>보통</option>
@@ -120,12 +122,12 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
                             </div>
                         </div>
                         <div>
-                            <label htmlFor={`focus-${student.id}-${se.standardId}`} className="block text-xs font-medium text-gray-600 mb-1">평어 생성 중심</label>
+                            <label htmlFor={`focus-${student.id}-${se.standardId}`} className="block text-xs font-black text-black mb-1">평어 생성 중심</label>
                             <select
                                 id={`focus-${student.id}-${se.standardId}`}
                                 value={se.generationFocus}
                                 onChange={(e) => handleStandardEvaluationChange(se.standardId, { generationFocus: e.target.value })}
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                className="input-neo w-full text-xs sm:text-sm"
                             >
                                 <option>성취 수준 & 태도 같은 비율</option>
                                 <option>성취 수준 중심</option>
@@ -133,13 +135,13 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
                             </select>
                         </div>
                         <div>
-                            <label htmlFor={`info-${student.id}-${se.standardId}`} className="block text-xs font-medium text-gray-600 mb-1">참고할 추가 정보 (선택)</label>
+                            <label htmlFor={`info-${student.id}-${se.standardId}`} className="block text-xs font-black text-black mb-1">참고할 추가 정보 (선택)</label>
                             <textarea
                                 id={`info-${student.id}-${se.standardId}`}
                                 rows={1}
                                 value={se.additionalInfo}
                                 onChange={(e) => handleStandardEvaluationChange(se.standardId, { additionalInfo: e.target.value })}
-                                className="w-full p-2 text-sm border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                className="input-neo w-full text-xs sm:text-sm"
                                 placeholder="예: 수학 퍼즐 풀기 좋아함."
                             />
                         </div>
@@ -151,41 +153,51 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
 
 
       {/* 평어 생성 버튼 */}
-      <button
-        onClick={() => onGenerateComment(student.id)}
-        disabled={isGenerationDisabled}
-        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white font-bold rounded-md shadow-sm hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-      >
-        <SparklesIcon />
-        {student.isGenerating ? '생성 중...' : student.comment ? '새로운 평어 생성' : '평어 생성'}
-      </button>
+      {student.isGenerating ? (
+        <div className="mt-3 sm:mt-4 flex justify-center">
+          <LoadingSpinner size="md" message="평어 생성 중..." />
+        </div>
+      ) : (
+        <button
+          onClick={() => onGenerateComment(student.id)}
+          disabled={isGenerationDisabled}
+          className="btn-neo-primary w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base"
+        >
+          <SparklesIcon />
+          {student.comment ? '🔄 새로운 평어 생성' : '✨ 평어 생성'}
+        </button>
+      )}
 
       {/* 생성된 평어 */}
       {student.error && (
-          <div className="mt-4 p-4 border border-red-200 rounded-md bg-red-50">
-              <p className="text-sm text-red-600">{student.error}</p>
-          </div>
+        <div className="mt-3 sm:mt-4">
+          <ErrorMessage
+            message={student.error}
+            onRetry={() => onGenerateComment(student.id)}
+            retryLabel="다시 생성"
+          />
+        </div>
       )}
       {student.comment && !student.error && (
-        <div className="mt-4 p-4 border border-gray-200 rounded-md bg-gray-50">
-          <h4 className="text-sm font-semibold text-gray-800 mb-2">생성 결과:</h4>
+        <div className="mt-3 sm:mt-4 p-3 sm:p-4 border-black border-3 sm:border-4 bg-orange-100 shadow-neo-sm">
+          <h4 className="text-xs sm:text-sm font-black text-black mb-2 border-black border-b-2 pb-1">📝 생성 결과:</h4>
           <textarea
             value={student.comment}
             onChange={(e) => onDataChange(student.id, { comment: e.target.value })}
             readOnly={student.isConfirmed}
             rows={5}
-            className="w-full p-2 text-sm text-gray-700 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 read-only:bg-gray-100 read-only:ring-0 read-only:border-gray-200 transition-colors"
+            className="input-neo w-full text-xs sm:text-sm read-only:bg-gray-200 read-only:border-gray-400"
           />
-          <div className="flex justify-end items-center gap-2 mt-2">
+          <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-2 mt-3">
             {student.isConfirmed ? (
               <>
-                <span className="flex items-center gap-1 text-sm font-semibold text-green-600">
+                <span className="flex items-center justify-center gap-1 text-xs sm:text-sm font-black bg-lime-200 px-2 py-1 sm:px-3 border-black border-2">
                   <CheckCircleIcon />
-                  확인됨
+                  ✅ 확인됨
                 </span>
                 <button
                   onClick={() => onDataChange(student.id, { isConfirmed: false })}
-                  className="flex items-center gap-1 text-xs px-2 py-1 bg-gray-200 text-gray-800 font-semibold rounded-md hover:bg-gray-300"
+                  className="btn-neo-secondary text-xs px-2 py-1 sm:px-3 w-full sm:w-auto"
                 >
                   <PencilIcon />
                   수정
@@ -196,14 +208,14 @@ const StudentCard: React.FC<StudentCardProps> = ({ student, evaluationData, isGe
                 <button
                   onClick={() => onGenerateComment(student.id)}
                   disabled={student.isGenerating}
-                  className="flex items-center gap-1 text-xs px-2 py-1 bg-gray-200 text-gray-800 font-semibold rounded-md hover:bg-gray-300 disabled:opacity-50"
+                  className="btn-neo-secondary text-xs px-2 py-1 sm:px-3 disabled:opacity-50 w-full sm:w-auto"
                 >
                   <RefreshIcon />
                   재생성
                 </button>
                 <button
                   onClick={() => onDataChange(student.id, { isConfirmed: true })}
-                  className="flex items-center gap-1 text-xs px-2 py-1 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700"
+                  className="text-xs px-2 py-1 sm:px-3 bg-lime-200 text-black font-black border-black border-2 shadow-neo-sm hover:shadow-neo-md transition-all w-full sm:w-auto"
                 >
                   <CheckCircleIcon />
                   확인

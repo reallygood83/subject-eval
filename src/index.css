@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Neo-Brutalism 커스텀 스타일 */
+@layer base {
+  body {
+    @apply font-sans;
+    background-color: #f5f5f5;
+  }
+}
+
+@layer components {
+  /* Neo-Brutalism 버튼 스타일 */
+  .btn-neo {
+    @apply h-12 px-5 border-black border-2 font-bold;
+    @apply transition-all duration-200;
+  }
+
+  .btn-neo:hover {
+    @apply shadow-neo-sm;
+  }
+
+  .btn-neo:active {
+    @apply translate-x-[2px] translate-y-[2px] shadow-none;
+  }
+
+  /* Primary 버튼 - Cyan */
+  .btn-neo-primary {
+    @apply btn-neo bg-cyan-200;
+  }
+
+  .btn-neo-primary:hover {
+    @apply bg-cyan-300;
+  }
+
+  .btn-neo-primary:active {
+    @apply bg-cyan-400;
+  }
+
+  /* Secondary 버튼 - Violet */
+  .btn-neo-secondary {
+    @apply btn-neo bg-violet-200;
+  }
+
+  .btn-neo-secondary:hover {
+    @apply bg-violet-300;
+  }
+
+  .btn-neo-secondary:active {
+    @apply bg-violet-400;
+  }
+
+  /* Danger 버튼 - Red */
+  .btn-neo-danger {
+    @apply btn-neo bg-red-200;
+  }
+
+  .btn-neo-danger:hover {
+    @apply bg-red-300;
+  }
+
+  .btn-neo-danger:active {
+    @apply bg-red-400;
+  }
+
+  /* Disabled 버튼 */
+  .btn-neo:disabled {
+    @apply border-[#727272] bg-[#D4D4D4] text-[#676767];
+    @apply cursor-not-allowed;
+  }
+
+  .btn-neo:disabled:hover {
+    @apply shadow-none;
+  }
+
+  /* Neo-Brutalism 카드 */
+  .card-neo {
+    @apply w-full border-black border-2 rounded-md bg-white;
+    @apply shadow-neo-lg;
+  }
+
+  /* Neo-Brutalism Input */
+  .input-neo {
+    @apply w-full border-black border-2 p-2.5;
+    @apply focus:outline-none focus:shadow-neo-sm;
+  }
+
+  .input-neo:focus {
+    @apply bg-pink-200;
+  }
+}
