@@ -32,7 +32,13 @@ export const saveEvaluationData = async (
   fileName: string,
   evaluationData: EvaluationData
 ): Promise<string> => {
+  console.log('🔵 [저장 시작] saveEvaluationData 호출됨');
+  console.log('📁 파일명:', fileName);
+  console.log('👤 사용자 ID:', userId);
+  console.log('📊 평가 데이터:', evaluationData);
+
   try {
+    console.log('🔄 Firebase에 문서 추가 시도 중...');
     const docRef = await addDoc(collection(db, COLLECTION_NAME), {
       userId,
       fileName,
@@ -40,9 +46,14 @@ export const saveEvaluationData = async (
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
+    console.log('✅ [저장 성공] 문서 ID:', docRef.id);
     return docRef.id;
   } catch (error) {
-    console.error('Error saving evaluation data:', error);
+    console.error('❌ [저장 실패] 상세 에러:', error);
+    if (error instanceof Error) {
+      console.error('❌ 에러 메시지:', error.message);
+      console.error('❌ 에러 스택:', error.stack);
+    }
     throw new Error('분석 결과 저장에 실패했습니다.');
   }
 };

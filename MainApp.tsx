@@ -102,18 +102,37 @@ const App: React.FC = () => {
   };
 
   const handleSaveEvaluation = async () => {
+    console.log('🟢 [handleSaveEvaluation] 저장 버튼 클릭됨');
+    console.log('👤 user:', user);
+    console.log('📊 evaluationData:', evaluationData);
+    console.log('📁 uploadedFile:', uploadedFile);
+    console.log('🆔 currentEvaluationId:', currentEvaluationId);
+
     if (!user || !evaluationData || !uploadedFile || currentEvaluationId) {
+      console.warn('⚠️ [저장 중단] 조건 미충족:', {
+        hasUser: !!user,
+        hasEvaluationData: !!evaluationData,
+        hasUploadedFile: !!uploadedFile,
+        alreadySaved: !!currentEvaluationId
+      });
       return;
     }
 
     try {
+      console.log('🔄 [저장 중] setIsSaving(true) 호출');
       setIsSaving(true);
+
+      console.log('📤 [저장 요청] saveEvaluationData 호출 중...');
       const savedId = await saveEvaluationData(user.uid, uploadedFile.name, evaluationData);
+
+      console.log('✅ [저장 완료] savedId:', savedId);
       setCurrentEvaluationId(savedId);
+      alert('✅ 분석 결과가 성공적으로 저장되었습니다!');
     } catch (error) {
-      console.error('Error saving evaluation:', error);
-      alert('저장에 실패했습니다. 다시 시도해주세요.');
+      console.error('❌ [저장 실패] handleSaveEvaluation error:', error);
+      alert('❌ 저장에 실패했습니다. 다시 시도해주세요.\n\n오류: ' + (error instanceof Error ? error.message : '알 수 없는 오류'));
     } finally {
+      console.log('🏁 [저장 종료] setIsSaving(false) 호출');
       setIsSaving(false);
     }
   };
