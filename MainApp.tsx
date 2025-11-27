@@ -101,20 +101,24 @@ const App: React.FC = () => {
     }
   };
 
-  const handleConfirmReview = async () => {
-    // 리뷰 확인 시 Firebase에 자동 저장 (사용자가 로그인되어 있고, 아직 저장되지 않은 경우)
-    if (user && evaluationData && uploadedFile && !currentEvaluationId) {
-      try {
-        setIsSaving(true);
-        const savedId = await saveEvaluationData(user.uid, uploadedFile.name, evaluationData);
-        setCurrentEvaluationId(savedId);
-      } catch (error) {
-        console.error('Error saving evaluation:', error);
-        // 저장 실패해도 계속 진행 (사용자 경험 유지)
-      } finally {
-        setIsSaving(false);
-      }
+  const handleSaveEvaluation = async () => {
+    if (!user || !evaluationData || !uploadedFile || currentEvaluationId) {
+      return;
     }
+
+    try {
+      setIsSaving(true);
+      const savedId = await saveEvaluationData(user.uid, uploadedFile.name, evaluationData);
+      setCurrentEvaluationId(savedId);
+    } catch (error) {
+      console.error('Error saving evaluation:', error);
+      alert('저장에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleConfirmReview = () => {
     setCurrentStep('generate');
   };
 
@@ -326,7 +330,11 @@ const App: React.FC = () => {
               evaluationData={evaluationData}
               onConfirm={handleConfirmReview}
               onReanalyze={handleReanalyze}
+              onSave={handleSaveEvaluation}
               isReanalyzing={isAnalyzingPdf}
+              isSaving={isSaving}
+              isSaved={!!currentEvaluationId}
+              showSaveButton={!!user}
             />
           );
         }
