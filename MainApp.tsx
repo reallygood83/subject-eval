@@ -13,7 +13,7 @@ import Settings from './components/Settings';
 import SavedEvaluationsList from './components/SavedEvaluationsList';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
-import { HeaderIcon, DownloadIcon, CheckAllIcon, RestartIcon } from './components/icons';
+import { HeaderIcon, DownloadIcon, CheckAllIcon, RestartIcon, YouTubeIcon } from './components/icons';
 import Footer from './components/Footer';
 
 const App: React.FC = () => {
@@ -556,6 +556,17 @@ const App: React.FC = () => {
               </h1>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
+              <a
+                href="https://www.youtube.com/@%EB%B0%B0%EC%9B%80%EC%9D%98%EB%8B%AC%EC%9D%B8-p5v"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="유용하게 쓰셨으면 유튜브 구독 부탁합니다."
+                className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-red-600 hover:bg-red-700 text-white font-bold border-black border-2 shadow-neo-sm hover:shadow-neo-md transition-all text-xs sm:text-sm flex-1 sm:flex-none"
+              >
+                <YouTubeIcon />
+                <span className="hidden sm:inline">유튜브 구독</span>
+                <span className="sm:hidden">구독</span>
+              </a>
               <button
                 onClick={() => setCurrentPage('settings')}
                 className="btn-neo-secondary px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm flex-1 sm:flex-none"
