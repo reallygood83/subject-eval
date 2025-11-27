@@ -11,6 +11,7 @@ import StudentCard from './components/StudentCard';
 import ReviewData from './components/ReviewData';
 import Settings from './components/Settings';
 import SavedEvaluationsList from './components/SavedEvaluationsList';
+import YouTubeSubscribeModal from './components/YouTubeSubscribeModal';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import { HeaderIcon, DownloadIcon, CheckAllIcon, RestartIcon, YouTubeIcon } from './components/icons';
@@ -28,7 +29,8 @@ const App: React.FC = () => {
   const [showSavedEvaluations, setShowSavedEvaluations] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [currentEvaluationId, setCurrentEvaluationId] = useState<string | null>(null);
-  
+  const [showYouTubeModal, setShowYouTubeModal] = useState<boolean>(false);
+
   const [studentCount, setStudentCount] = useState<number>(1);
   const [students, setStudents] = useState<StudentData[]>([]);
   const [currentSubject, setCurrentSubject] = useState<string>('');
@@ -193,6 +195,15 @@ const App: React.FC = () => {
     const student = students.find(s => s.id === id);
     if (!student || !evaluationData) return;
 
+    // 첫 평어 생성 시 YouTube 모달 표시 (localStorage로 관리)
+    const hasShownModal = localStorage.getItem('youtubeModalShown');
+    const hideModal = localStorage.getItem('hideYouTubeModal');
+
+    if (!hasShownModal && !hideModal) {
+      setShowYouTubeModal(true);
+      localStorage.setItem('youtubeModalShown', 'true');
+    }
+
     handleStudentDataChange(id, { isGenerating: true, error: null, isConfirmed: false });
 
     try {
@@ -203,9 +214,14 @@ const App: React.FC = () => {
       const allStandards = Object.values(evaluationData.standards).reduce<AchievementStandard[]>((acc, val) => acc.concat(val as AchievementStandard[]), []);
       const comment = await generateCommentFromApi(ai, student, allStandards);
       handleStudentDataChange(id, { comment, isGenerating: false });
+
+      // 평어 생성 완료 시 모달 자동 닫기
+      setShowYouTubeModal(false);
     } catch (error) {
       console.error('Error generating comment:', error);
       handleStudentDataChange(id, { error: '평어 생성 중 오류가 발생했습니다.', isGenerating: false });
+      // 에러 발생 시에도 모달 닫기
+      setShowYouTubeModal(false);
     }
   };
 
@@ -538,6 +554,13 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-yellow-200 text-gray-800 font-sans">
+      {/* YouTube 구독 모달 */}
+      <YouTubeSubscribeModal
+        isOpen={showYouTubeModal}
+        onClose={() => setShowYouTubeModal(false)}
+        autoCloseDelay={5000}
+      />
+
       {/* 저장된 분석 결과 목록 모달 */}
       {showSavedEvaluations && user && (
         <SavedEvaluationsList
@@ -561,7 +584,7 @@ const App: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="유용하게 쓰셨으면 유튜브 구독 부탁합니다."
-                className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-red-600 hover:bg-red-700 text-white font-bold border-black border-2 shadow-neo-sm hover:shadow-neo-md transition-all text-xs sm:text-sm flex-1 sm:flex-none"
+                className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-red-600 hover:bg-red-700 text-white font-bold border-black border-2 shadow-neo-sm hover:shadow-neo-md transition-all text-sm sm:text-base flex-1 sm:flex-none"
               >
                 <YouTubeIcon />
                 <span className="hidden sm:inline">유튜브 구독</span>
