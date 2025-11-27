@@ -3,12 +3,14 @@ import { GoogleGenAI } from '@google/genai';
 import type { EvaluationData, StudentData, AchievementStandard, StandardEvaluation } from './types';
 import { parsePdf } from './services/pdfParserService';
 import { generateComment as generateCommentFromApi } from './services/geminiService';
+import { saveEvaluationData, type SavedEvaluation } from './services/evaluationStorageService';
 import { useSettings } from './contexts/SettingsContext';
 import { useAuth } from './contexts/AuthContext';
 import PdfUpload from './components/PdfUpload';
 import StudentCard from './components/StudentCard';
 import ReviewData from './components/ReviewData';
 import Settings from './components/Settings';
+import SavedEvaluationsList from './components/SavedEvaluationsList';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import { HeaderIcon, DownloadIcon, CheckAllIcon, RestartIcon } from './components/icons';
@@ -23,6 +25,9 @@ const App: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isAnalyzingPdf, setIsAnalyzingPdf] = useState<boolean>(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const [showSavedEvaluations, setShowSavedEvaluations] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [currentEvaluationId, setCurrentEvaluationId] = useState<string | null>(null);
   
   const [studentCount, setStudentCount] = useState<number>(1);
   const [students, setStudents] = useState<StudentData[]>([]);
@@ -71,6 +76,7 @@ const App: React.FC = () => {
     setUploadedFile(file);
     setIsAnalyzingPdf(true);
     setPdfError(null);
+    setCurrentEvaluationId(null); // 새로운 업로드이므로 기존 ID 초기화
     try {
       if (!settings.geminiApiKey) {
         throw new Error("Gemini API 키가 설정되지 않았습니다. 설정 페이지에서 API 키를 입력해주세요.");
@@ -95,10 +101,23 @@ const App: React.FC = () => {
     }
   };
 
-  const handleConfirmReview = () => {
+  const handleConfirmReview = async () => {
+    // 리뷰 확인 시 Firebase에 자동 저장 (사용자가 로그인되어 있고, 아직 저장되지 않은 경우)
+    if (user && evaluationData && uploadedFile && !currentEvaluationId) {
+      try {
+        setIsSaving(true);
+        const savedId = await saveEvaluationData(user.uid, uploadedFile.name, evaluationData);
+        setCurrentEvaluationId(savedId);
+      } catch (error) {
+        console.error('Error saving evaluation:', error);
+        // 저장 실패해도 계속 진행 (사용자 경험 유지)
+      } finally {
+        setIsSaving(false);
+      }
+    }
     setCurrentStep('generate');
   };
-  
+
   const handleStartOver = () => {
     setCurrentStep('upload');
     setEvaluationData(null);
@@ -108,6 +127,15 @@ const App: React.FC = () => {
     setStudents([]);
     setCurrentSubject('');
     setIsGeneratingAll(false);
+    setCurrentEvaluationId(null);
+  };
+
+  const handleLoadSavedEvaluation = (saved: SavedEvaluation) => {
+    setEvaluationData(saved.evaluationData);
+    setUploadedFile(new File([], saved.fileName)); // 파일명만 보존
+    setCurrentEvaluationId(saved.id);
+    setCurrentStep('generate'); // 바로 평어 생성 단계로
+    setShowSavedEvaluations(false);
   };
 
 
@@ -273,7 +301,24 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (currentStep) {
       case 'upload':
-        return <PdfUpload onUpload={handlePdfUpload} loading={isAnalyzingPdf} error={pdfError} />;
+        return (
+          <>
+            <PdfUpload onUpload={handlePdfUpload} loading={isAnalyzingPdf} error={pdfError} />
+            {user && (
+              <div className="px-3 sm:px-0 mt-6">
+                <button
+                  onClick={() => setShowSavedEvaluations(true)}
+                  className="btn-neo-secondary w-full sm:w-auto px-6 py-3 text-base sm:text-lg"
+                >
+                  📂 저장된 분석 결과 불러오기
+                </button>
+                <p className="mt-2 text-sm font-medium text-gray-600">
+                  이전에 분석한 평가 계획서를 불러와서 평어 생성을 계속할 수 있습니다.
+                </p>
+              </div>
+            )}
+          </>
+        );
       case 'review':
         if (evaluationData) {
           return (
@@ -466,6 +511,15 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-yellow-200 text-gray-800 font-sans">
+      {/* 저장된 분석 결과 목록 모달 */}
+      {showSavedEvaluations && user && (
+        <SavedEvaluationsList
+          userId={user.uid}
+          onLoad={handleLoadSavedEvaluation}
+          onClose={() => setShowSavedEvaluations(false)}
+        />
+      )}
+
       <header className="bg-white border-black border-b-4">
         <div className="max-w-7xl mx-auto py-3 px-3 sm:py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-3">
             <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
